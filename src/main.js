@@ -61,3 +61,16 @@ contactForm?.addEventListener("submit", async (e) => {
     submitBtn.disabled = false;
   }
 });
+
+// 닫기(X) 버튼 이벤트 바인딩
+const closeModalBtn = document.querySelector("#successModal .close");
+closeModalBtn?.addEventListener("click", () => {
+  successModal.style.display = "none";
+});
+
+// 모달 바깥 클릭 시 닫기
+window.addEventListener("click", (e) => {
+  if (e.target === successModal) {
+    successModal.style.display = "none";
+  }
+});

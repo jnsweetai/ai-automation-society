@@ -17,10 +17,10 @@ AI Automation Society는 AI 기반 자동화와 커뮤니티 기능을 제공하
 - **챗봇 연동**: Dify 기반 챗봇(udify.app)과 연동, CSP 정책 준수
 - **Supabase 연동**: 
   - 문의하기 폼 Supabase 연동 완료
-  - 환경변수로 보안 강화
+  - 환경변수로 보안 강화 (로컬 .env, Vercel 환경변수 등록)
   - contacts 테이블 RLS 정책 설정
-  - 성공/실패 메시지 처리
-- **환경변수 관리**: Vite 환경변수(`.env` 파일)로 민감 정보 관리
+  - 성공/실패 메시지 및 성공 모달(팝업) 표시/닫기 기능 구현
+- **환경변수 관리**: Vite 환경변수(`.env` 파일, Vercel 대시보드)로 민감 정보 관리
 - **빌드 및 개발 환경**: 
   - Vite 기반 모듈 번들링
   - .gitignore, package.json, vite.config.js 설정
@@ -39,6 +39,7 @@ AI Automation Society는 AI 기반 자동화와 커뮤니티 기능을 제공하
      VITE_SUPABASE_URL=여기에_프로젝트_URL
      VITE_SUPABASE_ANON_KEY=여기에_anon_key
      ```
+   - **Vercel 배포 시에는 Vercel 대시보드에서 동일한 환경변수를 등록해야 합니다.**
 
 2. **의존성 설치**
    ```
@@ -72,3 +73,4 @@ AI Automation Society는 AI 기반 자동화와 커뮤니티 기능을 제공하
 - Supabase는 문의하기 기능에만 사용됩니다.
 - 챗봇은 외부 서비스(udify.app)와 연동되어 있습니다.
 - 모든 JavaScript 코드는 src/main.js에서 관리됩니다.
+- 성공 모달(팝업)은 닫기 버튼 및 바깥 클릭으로 닫을 수 있습니다.
