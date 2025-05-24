@@ -1,10 +1,10 @@
-// Supabase Configuration
-const SUPABASE_URL = "https://sbp9b29c3392fc7ba020eb88c5fe0ff9845beb8aa36.supabase.co"
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNicDliMjljMzM5MmZjN2JhMDIwZWI4OGM1ZmUwZmY5ODQ1YmViOGFhMzYiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTczNzc0MzMyOSwiZXhwIjoyMDUzMzE5MzI5fQ.VYVJGhJOQOGKJNJvKOQJQJQJQJQJQJQJQJQJQJQJQJQ"
+// Supabase Configuration - 임시로 하드코딩 (테스트용)
+const SUPABASE_URL = "https://ukusvgxtnlejcrgzqazy.supabase.co"
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrdXN2Z3h0bmxlamNyZ3pxYXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwNzM4ODAsImV4cCI6MjA2MzY0OTg4MH0.VbJ-i5EfRC4e-ybB7LbcTXqz3dWdU1SIbzKwWetxr2g"
 
 // Initialize Supabase client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const { createClient } = supabase
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // DOM Elements
 const hamburger = document.querySelector(".hamburger")
@@ -59,12 +59,12 @@ contactForm?.addEventListener("submit", async (e) => {
 
   // Validation
   if (!name || !email || !message) {
-    showNotification("Please fill in all required fields.", "error")
+    showNotification("모든 필수 항목을 입력해주세요.", "error")
     return
   }
 
   if (!isValidEmail(email)) {
-    showNotification("Please enter a valid email address.", "error")
+    showNotification("올바른 이메일 주소를 입력해주세요.", "error")
     return
   }
 
@@ -72,8 +72,11 @@ contactForm?.addEventListener("submit", async (e) => {
   setLoadingState(true)
 
   try {
+    console.log("📝 문의하기 데이터 전송 시작...")
+    console.log("전송 데이터:", { name: name.trim(), email: email.trim(), message: message.trim().substring(0, 50) + "..." })
+    
     // Insert data into Supabase
-    const { data, error } = await supabase.from("contacts").insert([
+    const { data, error } = await supabaseClient.from("contacts").insert([
       {
         name: name.trim(),
         email: email.trim(),
@@ -83,15 +86,18 @@ contactForm?.addEventListener("submit", async (e) => {
     ])
 
     if (error) {
+      console.error("❌ Supabase 삽입 오류:", error)
       throw error
     }
 
+    console.log("✅ 데이터 저장 성공:", data)
+    
     // Success
     showSuccessModal()
     contactForm.reset()
   } catch (error) {
-    console.error("Error submitting form:", error)
-    showNotification("Failed to send message. Please try again.", "error")
+    console.error("❌ 문의하기 폼 전송 오류:", error)
+    showNotification("메시지 전송에 실패했습니다. 다시 시도해주세요.", "error")
   } finally {
     setLoadingState(false)
   }
@@ -210,7 +216,34 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("scroll", handleScrollAnimations)
 window.addEventListener("load", handleScrollAnimations)
 
+// Supabase 연결 테스트 함수
+async function testSupabaseConnection() {
+  try {
+    console.log("🔄 Supabase 연결 테스트 시작...")
+    console.log("URL:", SUPABASE_URL)
+    console.log("Key (처음 20자):", SUPABASE_ANON_KEY.substring(0, 20) + "...")
+    
+    const { data, error } = await supabaseClient
+      .from("contacts")
+      .select("count", { count: "exact", head: true })
+    
+    if (error) {
+      console.error("❌ Supabase 연결 오류:", error)
+      return false
+    }
+    
+    console.log("✅ Supabase 연결 성공!")
+    return true
+  } catch (error) {
+    console.error("❌ Supabase 연결 테스트 실패:", error)
+    return false
+  }
+}
+
 // Initialize
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("AI Automation Society website loaded successfully!")
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("AI 자동화 소사이어티 웹사이트가 성공적으로 로드되었습니다!")
+  
+  // Supabase 연결 테스트
+  await testSupabaseConnection()
 })

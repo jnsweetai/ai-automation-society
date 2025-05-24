@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase 연결 테스트</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-box { border: 1px solid #ccc; padding: 20px; margin: 10px 0; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        #log { background: #f8f9fa; padding: 10px; border-radius: 4px; margin-top: 10px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Supabase 연결 테스트</h1>
+    
+    <div class="test-box">
+        <h3>연결 상태</h3>
+        <div id="connectionStatus">테스트 중...</div>
+        <button onclick="testConnection()">연결 테스트</button>
+    </div>
+    
+    <div class="test-box">
+        <h3>테스트 데이터 삽입</h3>
+        <button onclick="insertTestData()">테스트 데이터 삽입</button>
+        <button onclick="readTestData()">데이터 조회</button>
+    </div>
+    
+    <div id="log"></div>
+
+        <script>        // .env 파일의 값들을 직접 사용        const SUPABASE_URL = "https://ukusvgxtnlejcrgzqazy.supabase.co"        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrdXN2Z3h0bmxlamNyZ3pxYXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwNzM4ODAsImV4cCI6MjA2MzY0OTg4MH0.VbJ-i5EfRC4e-ybB7LbcTXqz3dWdU1SIbzKwWetxr2g"
+        
+        const { createClient } = supabase
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        
+        function log(message) {
+            const logElement = document.getElementById('log')
+            const timestamp = new Date().toLocaleTimeString()
+            logElement.textContent += `[${timestamp}] ${message}\n`
+            console.log(message)
+        }
+        
+        async function testConnection() {
+            try {
+                log("🔄 Supabase 연결 테스트 시작...")
+                log("URL: " + SUPABASE_URL)
+                log("Key (처음 20자): " + SUPABASE_ANON_KEY.substring(0, 20) + "...")
+                
+                const { data, error } = await supabaseClient
+                    .from("contacts")
+                    .select("count", { count: "exact", head: true })
+                
+                if (error) {
+                    throw error
+                }
+                
+                log("✅ Supabase 연결 성공!")
+                document.getElementById('connectionStatus').innerHTML = '<span style="color: green;">✅ 연결 성공</span>'
+            } catch (error) {
+                log("❌ 연결 실패: " + error.message)
+                document.getElementById('connectionStatus').innerHTML = '<span style="color: red;">❌ 연결 실패</span>'
+            }
+        }
+        
+        async function insertTestData() {
+            try {
+                log("📝 테스트 데이터 삽입 시작...")
+                
+                const testData = {
+                    name: "테스트 사용자",
+                    email: "test@example.com",
+                    message: "테스트 메시지입니다 - " + new Date().toLocaleString(),
+                    created_at: new Date().toISOString()
+                }
+                
+                log("전송 데이터: " + JSON.stringify(testData, null, 2))
+                
+                const { data, error } = await supabaseClient
+                    .from("contacts")
+                    .insert([testData])
+                
+                if (error) {
+                    throw error
+                }
+                
+                log("✅ 데이터 삽입 성공!")
+                log("결과: " + JSON.stringify(data, null, 2))
+            } catch (error) {
+                log("❌ 데이터 삽입 실패: " + error.message)
+                log("오류 상세: " + JSON.stringify(error, null, 2))
+            }
+        }
+        
+        async function readTestData() {
+            try {
+                log("📖 데이터 조회 시작...")
+                
+                const { data, error } = await supabaseClient
+                    .from("contacts")
+                    .select("*")
+                    .order("created_at", { ascending: false })
+                    .limit(5)
+                
+                if (error) {
+                    throw error
+                }
+                
+                log("✅ 데이터 조회 성공!")
+                log("최근 5개 데이터:")
+                data.forEach((item, index) => {
+                    log(`${index + 1}. ${item.name} (${item.email}) - ${item.created_at}`)
+                })
+            } catch (error) {
+                log("❌ 데이터 조회 실패: " + error.message)
+            }
+        }
+        
+        // 페이지 로드 시 자동 연결 테스트
+        window.onload = function() {
+            testConnection()
+        }
+    </script>
+</body>
+</html> 
