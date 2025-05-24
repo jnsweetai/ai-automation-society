@@ -1,6 +1,6 @@
-// Supabase Configuration - 임시로 하드코딩 (테스트용)
-const SUPABASE_URL = "https://ukusvgxtnlejcrgzqazy.supabase.co"
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrdXN2Z3h0bmxlamNyZ3pxYXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwNzM4ODAsImV4cCI6MjA2MzY0OTg4MH0.VbJ-i5EfRC4e-ybB7LbcTXqz3dWdU1SIbzKwWetxr2g"
+// Supabase Configuration - Vite 환경변수 사용
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 // Initialize Supabase client
 const { createClient } = supabase
@@ -247,3 +247,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Supabase 연결 테스트
   await testSupabaseConnection()
 })
+
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll('.chatbot-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      openChatbot();
+    });
+  });
+});
