@@ -47,8 +47,8 @@
                     함께 배우고, 협업하며, 워크플로우를 최적화해보세요!
                 </p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="scrollToSection('contact')">커뮤니티 가입</button>
-                    <button class="btn btn-secondary" onclick="scrollToSection('cases')">케이스 스터디 보기</button>
+                    <button class="btn btn-primary" data-scroll="contact">커뮤니티 가입</button>
+                    <button class="btn btn-secondary" data-scroll="cases">케이스 스터디 보기</button>
                 </div>
             </div>
         </div>
@@ -168,7 +168,7 @@
                         </div>
                     </div>
                 </div>
-                <form id="contactForm" class="contact-form">
+                <form id="contactForm" class="contact-form" onsubmit="return false;">
                     <div class="form-group">
                         <label for="name">이름 *</label>
                         <input type="text" id="name" name="name" required>

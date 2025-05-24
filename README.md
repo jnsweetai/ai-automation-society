@@ -15,9 +15,16 @@ AI Automation Society는 AI 기반 자동화와 커뮤니티 기능을 제공하
 
 - **전체 한글화**: 모든 UI, 메시지, 메타 태그 한글 번역
 - **챗봇 연동**: Dify 기반 챗봇(udify.app)과 연동, CSP 정책 준수
-- **Supabase 연동**: 문의하기 폼 및 커뮤니티 기능을 위한 Supabase 연동, 환경변수로 보안 강화
+- **Supabase 연동**: 
+  - 문의하기 폼 Supabase 연동 완료
+  - 환경변수로 보안 강화
+  - contacts 테이블 RLS 정책 설정
+  - 성공/실패 메시지 처리
 - **환경변수 관리**: Vite 환경변수(`.env` 파일)로 민감 정보 관리
-- **빌드 및 개발 환경**: Vite, .gitignore, package.json, vite.config.js 등 최신 프론트엔드 개발 환경 구축
+- **빌드 및 개발 환경**: 
+  - Vite 기반 모듈 번들링
+  - .gitignore, package.json, vite.config.js 설정
+  - src/main.js 엔트리 포인트 구성
 - **불필요한 관리자/테스트 파일 및 요소 완전 제거**
 - **반응형 네비게이션 및 메뉴 구조 단순화**
 - **CSP 정책 대응**: 인라인 스크립트 제거, JS 이벤트 바인딩 방식 적용
@@ -43,6 +50,8 @@ AI Automation Society는 AI 기반 자동화와 커뮤니티 기능을 제공하
    npm run dev
    ```
    - 브라우저에서 `http://localhost:3000` 접속
+   - 문의하기 폼 테스트 가능
+   - 챗봇 연동 확인 가능
 
 4. **빌드**
    ```
@@ -62,3 +71,4 @@ AI Automation Society는 AI 기반 자동화와 커뮤니티 기능을 제공하
 
 - Supabase는 문의하기 기능에만 사용됩니다.
 - 챗봇은 외부 서비스(udify.app)와 연동되어 있습니다.
+- 모든 JavaScript 코드는 src/main.js에서 관리됩니다.
